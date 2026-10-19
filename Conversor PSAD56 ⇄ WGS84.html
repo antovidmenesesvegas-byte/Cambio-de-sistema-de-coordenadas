@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="es"><head><meta charset="utf-8"><title>Conversor PSAD56 ⇄ WGS84</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);--bg:#f7f6f2;--card:#fff;--tx:#222;--mu:#666;--bd:#d9d6cc;--ac:#1d6fb8;--rd:#d85a30;--gr:#2a9d6f}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#17181a;--card:#222428;--tx:#e8e8e6;--mu:#9a9a96;--bd:#3a3d42;--ac:#5aa9ee;--rd:#f08a62;--gr:#4cc79a}}
+:root[data-theme="dark"]{--bg:#17181a;--card:#222428;--tx:#e8e8e6;--mu:#9a9a96;--bd:#3a3d42;--ac:#5aa9ee;--rd:#f08a62;--gr:#4cc79a}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--tx);font:15px/1.45 system-ui,-apple-system,"Segoe UI",sans-serif;padding:12px;max-width:760px;margin-inline:auto}
+h1{font-size:20px;margin:4px 0 2px}h2{font-size:15px;margin:0 0 8px}
+.sub{color:var(--mu);font-size:13px;margin-bottom:10px}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:12px;margin-bottom:12px}
+.row{display:flex;flex-wrap:wrap;gap:8px}.row>label{flex:1 1 130px;font-size:12px;color:var(--mu);display:flex;flex-direction:column;gap:3px}
+input,select,textarea,button{font:inherit;color:var(--tx);background:var(--bg);border:1px solid var(--bd);border-radius:8px;padding:7px 8px;width:100%}
+button{background:var(--ac);color:#fff;border:0;cursor:pointer;font-weight:600;width:auto;padding:8px 14px}
+button.s{background:var(--bg);color:var(--tx);border:1px solid var(--bd)}
+.sc{overflow-x:auto}table{border-collapse:collapse;width:100%;font-size:13px;font-variant-numeric:tabular-nums}
+td,th{border-bottom:1px solid var(--bd);padding:4px 6px;text-align:right;white-space:nowrap}th:first-child,td:first-child{text-align:left}
+canvas{width:100%;height:auto;display:block;border-radius:8px;touch-action:none}
+.k{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:4px}
+.big{font-size:16px;font-weight:600}.mu{color:var(--mu);font-size:12px}
+textarea{height:90px;font-family:ui-monospace,monospace;font-size:12px}
+details{margin:6px 0}summary{cursor:pointer;font-weight:600}pre{background:var(--bg);padding:8px;border-radius:8px;overflow-x:auto;font-size:12px;margin:6px 0;white-space:pre-wrap}body{background:radial-gradient(1100px 420px at 50% -140px,rgba(29,111,184,.2),transparent 70%),var(--bg)}
+h1{font-size:26px;margin:6px 0 2px;letter-spacing:-.4px;background:linear-gradient(90deg,var(--ac),var(--gr));-webkit-background-clip:text;background-clip:text;color:transparent}
+.card{box-shadow:0 2px 12px rgba(0,0,0,.07);border-top:3px solid var(--ac)}
+h2{font-size:16px}h4{margin:12px 0 2px;font-size:11px;color:var(--mu);text-transform:uppercase;letter-spacing:.08em}
+button{background:linear-gradient(135deg,var(--ac),#2b8a8a);box-shadow:0 2px 6px rgba(29,111,184,.35);transition:transform .1s}button:hover{transform:translateY(-1px)}button.s{background:var(--bg);box-shadow:none}
+.ft{text-align:center;color:var(--mu);font-size:12px;margin:18px 0 8px}
+.v{color:var(--ac);font-weight:600}.mu{color:var(--mu)}
+details{border-bottom:1px solid var(--bd);padding:4px 0}summary{cursor:pointer;font-weight:600;padding:6px 0}
+.mb{overflow-x:auto;padding-bottom:6px}
+.eq{display:flex;flex-wrap:wrap;align-items:center;gap:.25em .35em;margin:8px 0;font:17px/1.7 "Cambria Math","STIX Two Math",Cambria,"Times New Roman",serif}
+.eq i{font-style:italic}.eq sub,.eq sup{font-size:.7em;line-height:0}
+.fr{display:inline-flex;flex-direction:column;align-items:center;vertical-align:middle;text-align:center;margin:0 .15em}
+.fr>span{padding:0 .25em;line-height:1.35}.fr>span:first-child{border-bottom:1.4px solid currentColor}
+.sq{position:relative;display:inline-block;vertical-align:middle;padding-left:.8em;margin:0 .1em}
+.sq svg{position:absolute;left:0;top:0;width:.8em;height:100%;overflow:visible}.sq path{fill:none;stroke:currentColor;stroke-width:1.4}
+.sq .ov{display:inline-block;border-top:1.4px solid currentColor;padding:2px .3em 0 .1em}
+.mx{display:inline-flex;align-items:stretch;vertical-align:middle;margin:0 .15em}
+.bk{display:block;width:.4em;border:1.6px solid currentColor;border-right:0;border-radius:3px 0 0 3px}.bk.r{border:1.6px solid currentColor;border-left:0;border-radius:0 3px 3px 0}
+.gd{display:grid;gap:.1em 1em;padding:.25em .35em;text-align:right;font-variant-numeric:tabular-nums}
+</style></head><body>
+<h1>🌎 Conversor de coordenadas geodésicas</h1>
+<div class="sub">11 datums · geográficas, UTM, cartesianas, esféricas · zonas · globo</div>
+
+<div class="card"><h2>1. Punto de entrada</h2>
+<div class="row">
+<label>Datum origen<select id="from"></select></label>
+<label>Datum destino<select id="to"></select></label>
+<label>Tipo de entrada<select id="mode"><option value="geo">Geográficas (°)</option><option value="utm">UTM</option><option value="ecef">Cartesianas geocéntricas XYZ</option><option value="sph">Esféricas geocéntricas</option></select></label>
+</div>
+<div class="row" id="gF" style="margin-top:8px">
+<label>Latitud (− sur)<input id="lat" value="-13.1631" inputmode="decimal"></label>
+<label>Longitud (− oeste)<input id="lon" value="-74.2236" inputmode="decimal"></label></div>
+<div class="row" id="uF" style="margin-top:8px;display:none">
+<label>Zona<input id="zn" value="18" inputmode="numeric"></label>
+<label>Hemisferio<select id="hm"><option value="S">Sur</option><option value="N">Norte</option></select></label>
+<label>Este (m)<input id="ee" value="584600" inputmode="decimal"></label>
+<label>Norte (m)<input id="nn" value="8543000" inputmode="decimal"></label></div>
+<div class="row" id="cF" style="margin-top:8px;display:none"><label>X (m)<input id="cx"></label><label>Y (m)<input id="cy"></label><label>Z (m)<input id="cz"></label></div>
+<div class="row" id="sF" style="margin-top:8px;display:none"><label>φ geocéntrica (°)<input id="sp"></label><label>λ (°)<input id="sl"></label><label>r (m)<input id="sr"></label></div>
+<div class="row" id="hRow" style="margin-top:8px"><label>h elipsoidal (m)<input id="hh" value="0" inputmode="decimal"></label></div>
+<div class="row" style="margin-top:8px"><label style="flex:2 1 220px">Región para PSAD56 (traslación a WGS84)<select id="pre">
+<option value="-279,175,-379">Perú – valor común (−279, 175, −379)</option>
+<option value="-270,188,-388">Perú – oeste (−270, 188, −388)</option>
+<option value="-288,175,-376">Chile/Bolivia (−288, 175, −376)</option>
+<option value="c">Personalizado (edita abajo)</option></select></label></div>
+<div style="margin-top:10px;display:flex;gap:8px"><button id="go">Convertir</button><button class="s" id="ex">Ejemplo Ayacucho</button></div>
+<div class="mu" style="margin-top:6px">Confirma los parámetros oficiales (IGN Perú) para tu zona de trabajo: varían según la región.</div>
+</div>
+
+<div class="card"><h2>2. Resultado</h2><div id="res" class="sc"></div></div>
+
+<div class="card"><h2>3. Desplazamiento en planta</h2>
+<canvas id="plan" width="720" height="420"></canvas><div class="mu" id="plcap"></div></div>
+
+<div class="card"><h2>4. Zonas UTM (mismo punto, distintas zonas)</h2>
+<canvas id="strip" width="720" height="110"></canvas>
+<div class="sc" id="ztab" style="margin-top:8px"></div></div>
+
+<div class="card"><h2>5. Globo terráqueo</h2>
+<canvas id="globe" width="720" height="560"></canvas>
+<div class="row" style="margin-top:8px;align-items:end">
+<label style="flex:3 1 200px">Zoom: <span id="zv">1×</span><input type="range" id="zoom" min="0" max="3.8" step="0.01" value="0"></label>
+<button class="s" id="rc">Centrar en punto</button></div>
+<div class="mu" id="gcap">Arrastra para girar. A 1× el desplazamiento no se ve: acerca el zoom.</div>
+<div class="mu"><span class="k" style="background:var(--rd)"></span>origen &nbsp;<span class="k" style="background:var(--ac)"></span>destino &nbsp;líneas amarillas: meridianos centrales (zona activa y vecinas) · franja rosa: zona activa</div></div>
+
+<div class="card"><h2>6. Operaciones matemáticas y parámetros</h2><div id="math"></div></div>
+
+<div class="card"><h2>7. Conversión por lotes</h2>
+<div class="mu">Una línea por punto según el tipo de entrada: «lat lon [h]», «E N [h]», «X Y Z» o «φc λ r».</div>
+<textarea id="bin">-13.1631 -74.2236
+-12.0464 -77.0428
+-13.5170 -71.9785</textarea>
+<div style="margin:8px 0"><button id="bgo">Convertir lote</button></div>
+<textarea id="bout" readonly placeholder="lat,lon,zona,este,norte"></textarea></div>
+
+<div class="ft">Helmert de 7 parámetros · UTM por series de Krüger · PSAD56, WGS84, SIRGAS2000 y más</div>
+<script>
+const D=Math.PI/180,$=id=>document.getElementById(id);
+const WGS={a:6378137,f:1/298.257223563},INT={a:6378388,f:1/297};
+const el=d=>EL[DT[d][0]];
+const e2=E=>E.f*(2-E.f);
+function cons(E){const n=E.f/(2-E.f),n2=n*n,n3=n2*n;return{n,A:E.a/(1+n)*(1+n2/4+n2*n2/64),al:[n/2-2*n2/3+5*n3/16,13*n2/48-3*n3/5,61*n3/240],be:[n/2-2*n2/3+37*n3/96,n2/48+n3/15,17*n3/480]}}
+const K0=0.9996,zoneOf=lo=>Math.min(60,Math.max(1,Math.floor((lo+180)/6)+1)),cm=z=>z*6-183;
+function fwd(la,lo,E,z){const c=cons(E),e=Math.sqrt(e2(E)),ph=la*D,l=(lo-cm(z))*D,t=Math.tan(ph),sg=Math.sinh(e*Math.atanh(e*t/Math.sqrt(1+t*t))),tp=t*Math.sqrt(1+sg*sg)-sg*Math.sqrt(1+t*t);
+let xi=Math.atan2(tp,Math.cos(l)),et=Math.asinh(Math.sin(l)/Math.sqrt(tp*tp+Math.cos(l)**2)),X=xi,H=et;
+c.al.forEach((a,i)=>{const j=2*(i+1);X+=a*Math.sin(j*xi)*Math.cosh(j*et);H+=a*Math.cos(j*xi)*Math.sinh(j*et)});
+let Ee=500000+K0*c.A*H,N=K0*c.A*X;if(la<0)N+=1e7;
+const gam=Math.atan(Math.tan(l)*Math.sin(ph))/D,R=6371000,x=Ee-5e5,k=K0*(1+x*x/(2*K0*K0*R*R));return{E:Ee,N,gam,k,xp:xi,ep:et,xi:X,et:H,tp,sg,t,c}}
+function inv(Ee,N,E,z,south){const c=cons(E),e=Math.sqrt(e2(E)),e_=e2(E);if(south)N-=1e7;
+let xi=N/(K0*c.A),et=(Ee-5e5)/(K0*c.A),xp=xi,ep=et;
+c.be.forEach((b,i)=>{const j=2*(i+1);xp-=b*Math.sin(j*xi)*Math.cosh(j*et);ep-=b*Math.cos(j*xi)*Math.sinh(j*et)});
+const tp=Math.sin(xp)/Math.sqrt(Math.sinh(ep)**2+Math.cos(xp)**2);let t=tp;
+for(let i=0;i<6;i++){const sg=Math.sinh(e*Math.atanh(e*t/Math.sqrt(1+t*t))),ti=t*Math.sqrt(1+sg*sg)-sg*Math.sqrt(1+t*t);t+=(tp-ti)/Math.sqrt(1+ti*ti)*(1+(1-e_)*t*t)/((1-e_)*Math.sqrt(1+t*t))}
+return[Math.atan(t)/D,cm(z)+Math.atan2(Math.sinh(ep),Math.cos(xp))/D]}
+function dms(v,p,n){const s=v<0?n:p;v=Math.abs(v);const d=Math.floor(v),m=Math.floor((v-d)*60),x=((v-d)*60-m)*60;return`${d}°${String(m).padStart(2,'0')}′${x.toFixed(4).padStart(7,'0')}″ ${s}`}
+const f=(v,n=3)=>Number(v).toLocaleString('es-PE',{minimumFractionDigits:n,maximumFractionDigits:n,useGrouping:false});
+let S={};
+function css(n){return getComputedStyle(document.documentElement).getPropertyValue(n).trim()}
+function drawPlan(){const c=$('plan'),x=c.getContext('2d'),W=c.width,H=c.height;x.clearRect(0,0,W,H);
+const tx=css('--tx'),mu=css('--mu'),bd=css('--bd');const R=Math.max(S.dist,0.5)*1.5,sc=(H/2-40)/R,cx=W/2,cy=H/2;
+const stepL=[0.5,1,2,5,10,20,50,100,200,500,1000].find(s=>s*sc>45)||1000;
+x.font='11px system-ui';x.strokeStyle=bd;x.fillStyle=mu;x.lineWidth=1;
+for(let m=-Math.floor(W/2/sc/stepL)*stepL;m<=W/2/sc;m+=stepL){const X=cx+m*sc;x.beginPath();x.moveTo(X,0);x.lineTo(X,H);x.stroke();x.fillText(f(m,stepL<1?1:0),X+2,H-4)}
+for(let m=-Math.floor(H/2/sc/stepL)*stepL;m<=H/2/sc;m+=stepL){const Y=cy-m*sc;x.beginPath();x.moveTo(0,Y);x.lineTo(W,Y);x.stroke();x.fillText(f(m,stepL<1?1:0),3,Y-2)}
+const px=cx+S.dE*sc,py=cy-S.dN*sc;
+x.strokeStyle=tx;x.lineWidth=2;x.setLineDash([6,4]);x.beginPath();x.moveTo(cx,cy);x.lineTo(px,py);x.stroke();x.setLineDash([]);
+const dot=(X,Y,col,t)=>{x.fillStyle=col;x.beginPath();x.arc(X,Y,7,0,7);x.fill();x.fillStyle=tx;x.font='bold 12px system-ui';x.fillText(t,X+10,Y-8)};
+dot(cx,cy,css('--rd'),S.fr+' (E,N origen)');dot(px,py,css('--ac'),S.to);
+x.fillStyle=tx;x.font='bold 13px system-ui';x.fillText('N ↑',W-40,22);
+$('plcap').textContent=`Cuadrícula cada ${stepL} m (escala real, sin exagerar). Vector: ${f(S.dist,2)} m hacia ${f(S.az,1)}°.`}
+function drawStrip(){const c=$('strip'),x=c.getContext('2d'),W=c.width,H=c.height;x.clearRect(0,0,W,H);
+const l0=-90,l1=-60,X=l=>(l-l0)/(l1-l0)*W,tx=css('--tx'),mu=css('--mu');x.font='12px system-ui';
+for(let z=16;z<=20;z++){const a=X(cm(z)-3),b=X(cm(z)+3);x.fillStyle=z%2?'rgba(42,157,111,.18)':'rgba(29,111,184,.18)';x.fillRect(a,10,b-a,60);
+x.fillStyle=tx;x.fillText('Zona '+z,(a+b)/2-22,30);x.fillStyle=mu;x.fillText(cm(z)+'°',(a+b)/2-14,48);x.strokeStyle=css('--gr');x.setLineDash([4,3]);x.beginPath();x.moveTo((a+b)/2,56);x.lineTo((a+b)/2,70);x.stroke();x.setLineDash([])}
+x.fillStyle=css('--rd');x.fillRect(X(S.lo0)-1.5,6,3,70);x.beginPath();x.arc(X(S.lo0),78,6,0,7);x.fill();
+x.fillStyle=tx;x.fillText(`Punto ${f(S.lo0,4)}° → zona ${zoneOf(S.lo0)}`,Math.min(W-190,Math.max(4,X(S.lo0)-60)),100)}
+function zoneTable(){let r='<table><tr><th>Zona</th><th>Este</th><th>Norte</th><th>Conv.</th><th>k</th></tr>';
+for(let z=S.z1-1;z<=S.z1+1;z++){const u=fwd(S.la1,S.lo1,el(S.to),z);r+=`<tr${z===S.z1?' style="font-weight:700"':''}><td>${z}${S.la1<0?'S':'N'}${z===S.z1?' ★':''}</td><td>${f(u.E)}</td><td>${f(u.N)}</td><td>${f(u.gam,3)}°</td><td>${f(u.k,6)}</td></tr>`}
+$('ztab').innerHTML=r+'</table><div class="mu">★ zona natural. Fuera de la zona natural crecen la distorsión (k) y la convergencia.</div>'}
+// Globo
+let gc={la:-13,lo:-74},gz=1;
+function gCenter(){gc={la:S.la0,lo:S.lo0}}
+function pr(la,lo,R){const p=la*D,l=(lo-gc.lo)*D,p0=gc.la*D,vis=Math.sin(p0)*Math.sin(p)+Math.cos(p0)*Math.cos(p)*Math.cos(l);
+return{x:R*Math.cos(p)*Math.sin(l),y:R*(Math.cos(p0)*Math.sin(p)-Math.sin(p0)*Math.cos(p)*Math.cos(l)),v:vis>0}}
+/* ===== Conversión, UI y visualizaciones ===== */
+
+const EL={WGS,GRS80:{a:6378137,f:1/298.257222101},INT,CLK:{a:6378206.4,f:1/294.9786982},G67:{a:6378160,f:1/298.247167427}};
+const DT={PSAD56:['INT',-279,175,-379],WGS84:['WGS',0,0,0],SIRGAS2000:['GRS80',0,0,0],ETRS89:['GRS80',0,0,0],NAD83:['GRS80',0,0,0],SAD69:['G67',-57,1,-41],NAD27:['CLK',-8,160,176],ED50:['INT',-87,-98,-121],'Campo Inchauspe':['INT',-148,136,90],'Bogotá 1975':['INT',307,304,-318],'Córrego Alegre':['INT',-206,172,-6]};
+const AS=Math.PI/648000,PL=['ΔX (m)','ΔY (m)','ΔZ (m)','rx (″)','ry (″)','rz (″)','s (ppm)'];
+const wrp=v=>((v%360)+540)%360-180,g=v=>String(+Number(v).toPrecision(9));
+let pm='geo',dg=null;
+function g2x(la,lo,E,h=0){const e=e2(E),s=Math.sin(la*D),c=Math.cos(la*D),N=E.a/Math.sqrt(1-e*s*s);return[(N+h)*c*Math.cos(lo*D),(N+h)*c*Math.sin(lo*D),(N*(1-e)+h)*s]}
+function x2g([X,Y,Z],E){const e=e2(E),p=Math.hypot(X,Y);let la=Math.atan2(Z,p*(1-e)),N,h;for(let i=0;i<10;i++){N=E.a/Math.sqrt(1-e*Math.sin(la)**2);h=p/Math.cos(la)-N;la=Math.atan2(Z,p*(1-e*N/(N+h)))}N=E.a/Math.sqrt(1-e*Math.sin(la)**2);return[la/D,Math.atan2(Y,X)/D,p/Math.cos(la)-N]}
+function helR(p){const[a,b,c]=[p[3]*AS,p[4]*AS,p[5]*AS];return[[1,-c,b],[c,1,-a],[-b,a,1]]}
+function helF(X,p){const R=helR(p),k=1+p[6]*1e-6;return[0,1,2].map(i=>p[i]+k*(R[i][0]*X[0]+R[i][1]*X[1]+R[i][2]*X[2]))}
+function helI(X,p){const R=helR(p),k=1+p[6]*1e-6,Y=[0,1,2].map(i=>(X[i]-p[i])/k);return[0,1,2].map(i=>R[0][i]*Y[0]+R[1][i]*Y[1]+R[2][i]*Y[2])}
+const gP=r=>PL.map((_,i)=>+$('p'+r+'_'+i).value||0),sphc=X=>[Math.atan2(X[2],Math.hypot(X[0],X[1]))/D,Math.atan2(X[1],X[0])/D,Math.hypot(...X)],wmc=(a,b)=>[6378137*b*D,6378137*Math.log(Math.tan(Math.PI/4+a*D/2))];
+Object.keys(DT).forEach(k=>['from','to'].forEach(i=>$(i).add(new Option(k))));$('from').value='PSAD56';$('to').value='WGS84';
+const pb=document.createElement('div');pb.style.marginTop='8px';
+pb.innerHTML=[0,1].map(r=>`<div class="mu" id="pt${r}" style="margin-top:6px"></div><div class="row">${PL.map((n,i)=>`<label style="flex:1 1 68px">${n}<input id="p${r}_${i}" value="0"></label>`).join('')}</div>`).join('');
+$('go').parentElement.before(pb);
+function setP(r){const d=$(r?'to':'from').value,t=DT[d],E=EL[t[0]];[0,1,2].forEach(i=>$('p'+r+'_'+i).value=t[i+1]);[3,4,5,6].forEach(i=>$('p'+r+'_'+i).value=0);$('pt'+r).textContent=(r?'Destino ':'Origen ')+d+' → WGS84 · a='+E.a+' m · 1/f='+g(1/E.f)+' (editable)'}
+setP(0);setP(1);$('from').onchange=()=>setP(0);$('to').onchange=()=>setP(1);
+$('pre').onchange=()=>{const v=$('pre').value;if(v==='c')return;v.split(',').forEach((x,i)=>[0,1].forEach(r=>{if($(r?'to':'from').value==='PSAD56')$('p'+r+'_'+i).value=x}))};
+function showF(m){['gF','uF','cF','sF','hRow'].forEach(i=>$(i).style.display='none');({geo:['gF','hRow'],utm:['uF','hRow'],ecef:['cF'],sph:['sF']})[m].forEach(i=>$(i).style.display='')}
+function getSrc(m=$('mode').value){const E=el($('from').value),h=+$('hh').value||0;
+if(m==='geo')return[+$('lat').value,+$('lon').value,h];
+if(m==='utm')return inv(+$('ee').value,+$('nn').value,E,+$('zn').value,$('hm').value==='S').concat(h);
+if(m==='ecef')return x2g([+$('cx').value,+$('cy').value,+$('cz').value],E);
+const a=+$('sp').value*D,l=+$('sl').value*D,r=+$('sr').value;return x2g([r*Math.cos(a)*Math.cos(l),r*Math.cos(a)*Math.sin(l),r*Math.sin(a)],E)}
+function fillFields(la,lo,h){const E=el($('from').value),X=g2x(la,lo,E,h),z=zoneOf(lo),u=fwd(la,lo,E,z),p=Math.hypot(X[0],X[1]),v=(i,n,d)=>$(i).value=n.toFixed(d);
+v('lat',la,7);v('lon',lo,7);v('hh',h,3);$('zn').value=z;$('hm').value=la<0?'S':'N';v('ee',u.E,3);v('nn',u.N,3);v('cx',X[0],3);v('cy',X[1],3);v('cz',X[2],3);v('sp',Math.atan2(X[2],p)/D,7);v('sl',lo,7);v('sr',Math.hypot(p,X[2]),3)}
+$('mode').onchange=()=>{const o=pm;pm=$('mode').value;try{const s=getSrc(o);if(s.every(isFinite))fillFields(...s)}catch(e){}showF(pm)};
+$('ex').onclick=()=>{$('from').value='PSAD56';$('to').value='WGS84';setP(0);setP(1);$('mode').value=pm='geo';showF('geo');$('lat').value=-13.1631;$('lon').value=-74.2236;$('hh').value=2750;compute()};
+function compute(){
+const fr=$('from').value,to=$('to').value,p0=gP(0),p1=gP(1),E0=el(fr),E1=el(to),[la0,lo0,h0]=getSrc();
+if(![la0,lo0,h0].every(isFinite)||Math.abs(la0)>84||Math.abs(lo0)>180){$('res').textContent='Coordenadas fuera de rango.';return}
+const X0=g2x(la0,lo0,E0,h0),XW=helF(X0,p0),X1=helI(XW,p1),[la1,lo1,h1]=x2g(X1,E1),z0=$('mode').value==='utm'?+$('zn').value:zoneOf(lo0),z1=zoneOf(lo1);
+const u0=fwd(la0,lo0,E0,z0),u1=fwd(la1,lo1,E1,z0),dE=u1.E-u0.E,dN=u1.N-u0.N,dist=Math.hypot(dE,dN),az=(Math.atan2(dE,dN)/D+360)%360;
+const dX=X1.map((v,i)=>v-X0[i]),sl=Math.sin(lo0*D),cl=Math.cos(lo0*D),sp=Math.sin(la0*D),cp=Math.cos(la0*D),
+enu=[-sl*dX[0]+cl*dX[1],-sp*cl*dX[0]-sp*sl*dX[1]+cp*dX[2],cp*cl*dX[0]+cp*sl*dX[1]+sp*dX[2]];
+S={la0,lo0,h0,la1,lo1,h1,dE,dN,dist,az,z0,z1,fr,to,X0,XW,X1,p0,p1,E0,E1,u0,u1,enu,dX};
+const s0=sphc(X0),s1=sphc(X1),w0=wmc(la0,lo0),w1=wmc(la1,lo1),r=(a,b,c)=>`<tr><td>${a}</td><td>${b}</td><td>${c}</td></tr>`,hs=la0<0?'S':'N';
+$('res').innerHTML=`<table><tr><th></th><th>${fr}</th><th>${to}</th></tr>`+
+r('Latitud',f(la0,7)+'°',f(la1,7)+'°')+r('',dms(la0,'N','S'),dms(la1,'N','S'))+r('Longitud',f(lo0,7)+'°',f(lo1,7)+'°')+r('',dms(lo0,'E','W'),dms(lo1,'E','W'))+
+r('h elipsoidal (m)',f(h0,3),f(h1,3))+r(`UTM ${z0}${hs} · Este`,f(u0.E),f(u1.E))+r(`UTM ${z0}${hs} · Norte`,f(u0.N),f(u1.N))+
+r('Convergencia / k',`${f(u0.gam,4)}° / ${f(u0.k,6)}`,`${f(u1.gam,4)}° / ${f(u1.k,6)}`)+
+r('Cartesiana X (m)',f(X0[0]),f(X1[0]))+r('Cartesiana Y (m)',f(X0[1]),f(X1[1]))+r('Cartesiana Z (m)',f(X0[2]),f(X1[2]))+
+r('Esférica φc (λ igual)',f(s0[0],7)+'°',f(s1[0],7)+'°')+r('Esférica r (m)',f(s0[2]),f(s1[2]))+r('Web Mercator x (m)',f(w0[0]),f(w1[0]))+r('Web Mercator y (m)',f(w0[1]),f(w1[1]))+`</table>
+<p class="big">Δ Este ${f(dE,2)} m · Δ Norte ${f(dN,2)} m · ${f(dist,2)} m · acimut ${f(az,1)}°</p>
+<div class="mu">Cambio de las cartesianas: ΔX ${f(dX[0],2)}, ΔY ${f(dX[1],2)}, ΔZ ${f(dX[2],2)} m → local ENU (${f(enu[0],2)}, ${f(enu[1],2)}, ${f(enu[2],2)}) m. Misma ubicación física; solo cambia el sistema. UTM comparado en zona ${z0}; zona natural del destino: ${z1}.</div>`;
+drawPlan();drawStrip();zoneTable();gCenter();drawGlobe();$('math').innerHTML=mathHtml()}
+/* ===== Notación matemática visual (HTML/CSS, sin librerías externas) ===== */
+const nm=(v,d=4)=>`<span class="v">${Number(v).toFixed(d).replace('-','−')}</span>`,np=(v,d=4)=>v<0?'('+nm(v,d)+')':nm(v,d),
+sci=v=>Math.abs(v)<1e-3&&v!==0?Number(v).toExponential(3).replace('-','−'):Number(v).toFixed(8).replace(/0+$/,'').replace(/\.$/,'').replace('-','−'),
+I=t=>`<i>${t}</i>`,B=t=>`<b>${t}</b>`,
+fr=(a,b)=>`<span class="fr"><span>${a}</span><span>${b}</span></span>`,
+sq=t=>`<span class="sq"><svg viewBox="0 0 10 20" preserveAspectRatio="none"><path d="M0 13L2 11.5 5 18 10 0" vector-effect="non-scaling-stroke"/></svg><span class="ov">${t}</span></span>`,
+mxh=rows=>`<span class="mx"><i class="bk"></i><span class="gd" style="grid-template-columns:repeat(${rows[0].length},auto)">${rows.flat().map(c=>`<span>${c}</span>`).join('')}</span><i class="bk r"></i></span>`,
+colv=a=>mxh(a.map(t=>[t])),eq=(...p)=>`<div class="eq">${p.join(' ')}</div>`,
+sec=(t,b,o)=>`<details${o?' open':''}><summary>${t}</summary><div class="mb">${b}</div></details>`;
+function mathHtml(){const s=S,E0=s.E0,E1=s.E1,p0=s.p0,p1=s.p1,u=s.u1,u0=s.u0,z=s.z0,c=cons(E1),R=6371000,X0=s.X0,XW=s.XW,X1=s.X1,dX=s.dX,pp=Math.hypot(X1[0],X1[1]),dl=s.lo1-cm(z),
+sn=v=>Math.sin(v*D),cs=v=>Math.cos(v*D),Nf=(E,la)=>E.a/Math.sqrt(1-e2(E)*sn(la)**2),N0=Nf(E0,s.la0),N1=Nf(E1,s.la1),kk=p=>1+p[6]*1e-6,
+e0=e2(E0),e1=e2(E1),sl=sn(s.la0),cl=cs(s.la0),so=sn(s.lo0),co=cs(s.lo0),R0=helR(p0),R1=helR(p1),cell=v=>v===1?'1':sci(v),
+v3=a=>colv(a.map(t=>nm(t,3))),T=(M)=>M[0].map((_,i)=>M.map(r=>r[i])),
+ell=(E,t)=>{const e=e2(E);return`<h4>${t}</h4>`+eq(I('f'),'=',fr(1,nm(1/E.f,6)),'=',nm(E.f,10))+eq(I('b'),'=',I('a')+'(1 − '+I('f')+')','=',nm(E.a,3)+' (1 − '+nm(E.f,10)+')','=',B(nm(E.a*(1-E.f),3)+' m'))+eq(I('e')+'²','=',I('f')+'(2 − '+I('f')+')','=',nm(e,12))+eq(I('e')+'′²','=',fr(I('e')+'²','1 − '+I('e')+'²'),'=',fr(nm(e,10),nm(1-e,10)),'=',nm(e/(1-e),12))},
+hp=(p,t)=>{const r=p.slice(3,6).map(v=>v*AS);return`<h4>${t}</h4>`+eq(B('T'),'=',colv(p.slice(0,3).map(v=>nm(v,3))),'m')+eq(I('r')+'<sub>x</sub>, '+I('r')+'<sub>y</sub>, '+I('r')+'<sub>z</sub>','=',nm(p[3],4)+'″, '+nm(p[4],4)+'″, '+nm(p[5],4)+'″','×',fr('π','648 000'),'=',sci(r[0])+', '+sci(r[1])+', '+sci(r[2]),'rad')+eq(I('k'),'= 1 +',I('s'),'· 10<sup>−6</sup> = 1 +',nm(p[6],4),'· 10<sup>−6</sup> =',nm(kk(p),10))+eq(B('R'),'=',mxh(helR(p).map(r=>r.map(cell))))},
+Yv=[0,1,2].map(i=>(XW[i]-p1[i])/kk(p1)),sub=t=>'<sub>'+t+'</sub>',rr=I('r');
+return sec('1 · Elipsoides',ell(E0,'Origen · '+s.fr)+ell(E1,'Destino · '+s.to),1)+
+sec('2 · Parámetros de transformación (Helmert de 7 parámetros)',eq(B('X')+sub('WGS84'),'=',B('T'),'+',I('k'),'·',B('R'),'·',B('X')+sub('local'))+eq(B('R'),'=',mxh([['1','−'+rr+sub('z'),rr+sub('y')],[rr+sub('z'),'1','−'+rr+sub('x')],['−'+rr+sub('y'),rr+sub('x'),'1']]))+eq(B('X')+sub('local'),'=',B('R')+'<sup>T</sup>','·',fr(B('X')+sub('WGS84')+' − '+B('T'),I('k')),'<span class="mu">(inversa)</span>')+hp(p0,'Origen '+s.fr+' → WGS84')+hp(p1,'Destino '+s.to+' → WGS84 (se aplica la inversa)'))+
+sec('3 · Geodésicas → cartesianas (origen)',eq(I('φ'),'=',nm(s.la0,7)+'°',', ',I('λ'),'=',nm(s.lo0,7)+'°',', ',I('h'),'=',nm(s.h0,3),'m')+eq(I('N'),'=',fr(I('a'),sq('1 − '+I('e')+'² sin²'+I('φ'))),'=',fr(nm(E0.a,3),sq('1 − '+nm(e0,8)+' · '+np(sl,6)+'²')),'=',B(nm(N0,3)+' m'))+
+eq(I('X'),'= ('+I('N')+' + '+I('h')+') cos'+I('φ')+' cos'+I('λ'),'= ('+nm(N0,3)+' + '+nm(s.h0,3)+') · '+np(cl,6)+' · '+np(co,6),'=',B(nm(X0[0],3)))+
+eq(I('Y'),'= ('+I('N')+' + '+I('h')+') cos'+I('φ')+' sin'+I('λ'),'= ('+nm(N0,3)+' + '+nm(s.h0,3)+') · '+np(cl,6)+' · '+np(so,6),'=',B(nm(X0[1],3)))+
+eq(I('Z'),'= ('+I('N')+'(1 − '+I('e')+'²) + '+I('h')+') sin'+I('φ'),'= ('+nm(N0,3)+'(1 − '+nm(e0,8)+') + '+nm(s.h0,3)+') · '+np(sl,6),'=',B(nm(X0[2],3))))+
+sec('4 · Cambio de datum (en el espacio cartesiano)',eq(B('X')+sub('WGS84'),'=',v3(p0),'+',nm(kk(p0),10),'·',mxh(R0.map(r=>r.map(cell))),'·',v3(X0),'=',v3(XW))+
+eq(B('X')+sub('destino'),'=',mxh(T(R1).map(r=>r.map(cell))),'·',fr('1',nm(kk(p1),10)),'·(',v3(XW),'−',v3(p1),') =',mxh(T(R1).map(r=>r.map(cell))),'·',v3(Yv),'=',B('')+v3(X1))+
+eq('Δ','=',B('X')+sub('destino')+' − '+B('X')+sub('origen'),'=',v3(dX),'m')+eq('|Δ|','=',sq(I('ΔX')+'² + '+I('ΔY')+'² + '+I('ΔZ')+'²'),'=',sq(np(dX[0],3)+'² + '+np(dX[1],3)+'² + '+np(dX[2],3)+'²'),'=',B(nm(Math.hypot(...dX),3)+' m')))+
+sec('5 · Cartesianas → geodésicas (destino, iterativo)',eq(I('p'),'=',sq(I('X')+'² + '+I('Y')+'²'),'=',sq(np(X1[0],3)+'² + '+np(X1[1],3)+'²'),'=',nm(pp,3),'m')+eq(I('λ'),'= atan2('+I('Y')+', '+I('X')+') = atan2('+nm(X1[1],3)+', '+nm(X1[0],3)+') =',B(nm(s.lo1,7)+'°'))+
+eq(I('φ'),'= atan',fr(I('Z')+' + '+I('e')+'²'+I('N')+' sin'+I('φ'),I('p')),'= atan',fr(nm(X1[2],3)+' + '+nm(e1,8)+' · '+nm(N1,3)+' · '+np(sn(s.la1),6),nm(pp,3)),'=',B(nm(s.la1,7)+'°'),'<span class="mu">(se repite hasta converger)</span>')+
+eq(I('h'),'=',fr(I('p'),'cos'+I('φ')),'−',I('N'),'=',fr(nm(pp,3),np(cs(s.la1),6)),'−',nm(N1,3),'=',B(nm(s.h1,3)+' m')))+
+sec('6 · UTM: proyección transversa de Mercator (series de Krüger)',eq(I('k')+'₀ =',nm(K0,4),', λ₀ =',nm(cm(z),0)+'°',' (zona '+z+')',', Δλ = '+I('λ')+' − λ₀ =',nm(s.lo1,7)+' − '+np(cm(z),0),'=',nm(dl,7)+'°')+
+eq(I('n'),'=',fr(I('f'),'2 − '+I('f')),'=',nm(c.n,12))+eq(I('A'),'=',fr(I('a'),'1 + '+I('n')),'(1 +',fr(I('n')+'²',4),'+',fr(I('n')+'⁴',64),') =',fr(nm(E1.a,3),'1 + '+nm(c.n,9)),'(1 + …) =',B(nm(c.A,3)+' m'))+
+eq(I('α')+'₁ =',fr(I('n'),2),'−',fr('2'+I('n')+'²',3),'+',fr('5'+I('n')+'³',16),'=',nm(c.al[0],10))+eq(I('α')+'₂ =',fr('13'+I('n')+'²',48),'−',fr('3'+I('n')+'³',5),'=',nm(c.al[1],10),', ',I('α')+'₃ =',fr('61'+I('n')+'³',240),'=',nm(c.al[2],10))+
+eq(I('τ'),'= tan'+I('φ')+' =',nm(u.t,8))+eq(I('σ'),'= sinh(',I('e'),'· atanh',fr(I('e')+I('τ'),sq('1 + '+I('τ')+'²')),') = sinh(',nm(Math.sqrt(e1),6),'· atanh',fr(nm(Math.sqrt(e1),6)+' · '+np(u.t,6),sq('1 + '+np(u.t,6)+'²')),') =',nm(u.sg,10))+
+eq(I('τ')+'′ =',I('τ'),sq('1 + '+I('σ')+'²'),'−',I('σ'),sq('1 + '+I('τ')+'²'),'=',np(u.t,6),sq('1 + '+np(u.sg,8)+'²'),'−',np(u.sg,8),sq('1 + '+np(u.t,6)+'²'),'=',nm(u.tp,10))+
+eq(I('ξ')+'′ = atan2(',I('τ')+'′, cosΔλ) = atan2('+nm(u.tp,8)+', '+nm(cs(dl),8)+') =',nm(u.xp,10))+eq(I('η')+'′ = asinh',fr('sinΔλ',sq(I('τ')+'′² + cos²Δλ')),'= asinh',fr(np(sn(dl),8),sq(np(u.tp,8)+'² + '+nm(cs(dl)**2,8))),'=',nm(u.ep,10))+
+eq(I('ξ'),'=',I('ξ')+'′ + Σ'+sub('j=1…3'),I('α')+sub('j')+' sin(2j'+I('ξ')+'′) cosh(2j'+I('η')+'′) =',nm(u.xi,10))+eq(I('η'),'=',I('η')+'′ + Σ'+sub('j=1…3'),I('α')+sub('j')+' cos(2j'+I('ξ')+'′) sinh(2j'+I('η')+'′) =',nm(u.et,10))+
+eq('Este','= 500 000 +',I('k')+'₀',I('A'),I('η'),'= 500 000 +',nm(K0,4),'·',nm(c.A,3),'·',nm(u.et,10),'=',B(nm(u.E,3)+' m'))+eq('Norte','=',I('k')+'₀',I('A'),I('ξ')+(s.la1<0?' + 10 000 000':''),'=',nm(K0,4),'·',nm(c.A,3),'·',nm(u.xi,10)+(s.la1<0?' + 10 000 000':''),'=',B(nm(u.N,3)+' m'))+
+eq('<span class="mu">Inversa:</span>',I('ξ')+'′ = '+I('ξ')+' − Σ '+I('β')+sub('j')+' sin(2j'+I('ξ')+') cosh(2j'+I('η')+'), ',I('β')+'₁ =',fr(I('n'),2),'−',fr('2'+I('n')+'²',3),'+',fr('37'+I('n')+'³',96)))+
+sec('7 · Escala, convergencia y factores',eq(I('k'),'≈',I('k')+'₀ [ 1 +',fr('('+I('E')+' − 500 000)²','2 '+I('k')+'₀² '+I('R')+'²'),']','<span class="mu">(R = 6 371 000 m)</span>')+
+eq('Origen:',I('k'),'=',nm(K0,4),'[ 1 +',fr('('+np(u0.E-5e5,3)+')²','2 · '+nm(K0,4)+'² · 6 371 000²'),'] =',B(nm(u0.k,8)))+eq('Destino:',I('k'),'=',nm(K0,4),'[ 1 +',fr('('+np(u.E-5e5,3)+')²','2 · '+nm(K0,4)+'² · 6 371 000²'),'] =',B(nm(u.k,8)))+
+eq('γ ≈ atan(tanΔλ · sin'+I('φ')+') = atan(tan('+nm(dl,5)+'°) · '+np(sn(s.la1),6)+') =',B(nm(u.gam,6)+'°'))+
+eq('F'+sub('e'),'=',fr(I('R'),I('R')+' + '+I('h')),'=',fr('6 371 000','6 371 000 + '+np(s.h1,3)),'=',nm(R/(R+s.h1),9))+
+eq('F'+sub('c'),'=',I('k'),'· F'+sub('e'),'=',nm(u.k,8),'·',nm(R/(R+s.h1),9),'=',B(nm(u.k*R/(R+s.h1),9)),'→',nm((1-u.k*R/(R+s.h1))*1e6,1),'ppm <span class="mu">(1 ppm = 1 mm/km)</span>')+
+eq('D'+sub('cuadrícula'),'= F'+sub('c'),'· D'+sub('elipsoide'),',  ',I('s')+sub('origen')+' =',nm(p0[6],4),'ppm, ',I('s')+sub('destino')+' =',nm(p1[6],4),'ppm'))+
+sec('8 · Otras coordenadas (destino) y cambio local',eq(I('φ')+sub('c'),'= atan',fr(I('Z'),sq(I('X')+'² + '+I('Y')+'²')),'= atan',fr(nm(X1[2],3),nm(pp,3)),'=',B(nm(sphc(X1)[0],7)+'°'))+eq(I('r'),'=',sq(I('X')+'² + '+I('Y')+'² + '+I('Z')+'²'),'=',sq(np(X1[0],3)+'² + '+np(X1[1],3)+'² + '+np(X1[2],3)+'²'),'=',B(nm(sphc(X1)[2],3)+' m'))+
+eq(I('x'),'=',I('a'),'·',I('λ'),'= 6 378 137 ·',nm(s.lo1*D,8),'=',B(nm(wmc(s.la1,s.lo1)[0],3)+' m'))+eq(I('y'),'=',I('a'),'· ln tan',fr('π',4)+' + '+fr(I('φ'),2),'= 6 378 137 · ln tan(π/4 + '+nm(s.la1*D/2,8)+') =',B(nm(wmc(s.la1,s.lo1)[1],3)+' m'))+
+eq(colv(['E','N','U'].map(I)),'=',mxh([['−sin'+I('λ'),'cos'+I('λ'),'0'],['−sin'+I('φ')+' cos'+I('λ'),'−sin'+I('φ')+' sin'+I('λ'),'cos'+I('φ')],['cos'+I('φ')+' cos'+I('λ'),'cos'+I('φ')+' sin'+I('λ'),'sin'+I('φ')]]),'·',colv(['ΔX','ΔY','ΔZ'].map(I)))+
+eq('=',mxh([[-so,co,0],[-sl*co,-sl*so,cl],[cl*co,cl*so,sl]].map(r=>r.map(v=>nm(v,6)))),'·',v3(dX),'=',colv(s.enu.map(v=>B(nm(v,3)))),'m'))}
+
+/* ===== Globo: continentes con color; toda la geometría está fija en coordenadas del mundo ===== */
+const LAND=[
+['NORTEAMÉRICA','#58a868',[50,-100],[[71,-157],[69,-141],[69,-125],[68,-110],[69,-95],[73,-90],[68,-85],[63,-90],[60,-94],[57,-92],[52,-82],[55,-78],[60,-78],[62,-72],[58,-67],[53,-56],[50,-60],[47,-53],[45,-61],[43,-66],[41,-70],[38,-75],[35,-76],[31,-81],[27,-80],[25,-80.5],[29,-83],[30,-88],[29,-90],[28,-96],[24,-98],[20,-97],[19,-92],[21,-90],[21,-87],[16,-88],[15,-83],[10,-83],[9,-79.5],[8,-77.5],[8,-82],[10,-85.7],[13,-88],[16,-95],[17,-101],[20,-105],[23,-106],[27,-111],[31,-114],[32,-117],[35,-121],[40,-124.3],[46,-124],[49,-125],[54,-130],[58,-136],[60,-146],[59,-151],[57,-158],[55,-163],[58,-158],[60,-165],[64,-166],[66,-162],[68,-166]]],
+['SUDAMÉRICA','#35b08a',[-12,-60],[[12,-72],[11,-62],[8,-60],[5,-52],[0,-50],[-5,-35],[-8,-34.8],[-13,-38.5],[-23,-41],[-26,-48.5],[-34,-53.5],[-35,-57],[-39,-62],[-42,-64.5],[-47,-65.5],[-52,-68.5],[-55,-68],[-52,-74],[-46,-75],[-37,-73.5],[-30,-71.5],[-23,-70.5],[-18,-70.3],[-14,-76],[-8,-79],[-4,-81.2],[0,-80],[4,-77.5],[8,-77.5],[9,-79],[11,-75]]],
+['','#dbe8ef',0,[[83,-30],[82,-60],[78,-72],[76,-68],[70,-54],[65,-52],[60,-44],[62,-41],[66,-35],[70,-22],[76,-19],[81,-12]]],
+['EURASIA','#cdb35f',[52,70],[[36,-6],[37,-9],[43,-9],[44,-1.5],[48,-4.5],[51,2],[54,9],[57,8],[58,6],[62,5],[66,13],[70,20],[71,28],[69,41],[66,34],[64,40],[67,45],[68,60],[72,68],[77,105],[73,113],[72,130],[71,150],[69,170],[67,180],[63,177],[60,164],[56,162],[51,156],[54,155],[59,155],[59,143],[54,140],[49,141],[43,135],[40,129],[35,129],[38,126.5],[40,124.5],[39,122],[37,121],[35,119],[31,122],[26,119.5],[22,114],[21,110],[19,108.5],[16,108],[11,109],[9,105],[12,102],[13,100],[10,99.5],[6,101],[2,104],[4,100],[8,98],[13,98],[16,97],[20,93],[22,91],[20,86],[16,82],[13,80],[8,77.5],[10,76],[15,74],[21,72.5],[23,68.5],[25,66],[25,61],[27,56],[26,52],[24,51],[24,54],[26,56],[23,59],[20,58],[17,55],[13,45],[12.5,43.3],[16,41],[21,39],[27,35],[30,32.5],[31,34],[36,36],[37,30],[36,28],[38,26.5],[40,26],[38,24],[36,23],[38,21],[40,19.5],[45,13],[42,14],[40,18],[38,16],[38,15.5],[41,13],[44,10],[44,8],[43,3],[41,1],[39,0],[37,-2]]],
+['ÁFRICA','#e29a52',[5,20],[[37,10],[37,-1],[35.5,-6],[31,-10],[27,-13],[21,-17],[15,-17.5],[11,-15],[7,-12],[4.5,-7.5],[5,-2],[6,2],[4,7],[4,9.5],[0,9],[-5,12],[-12,13.5],[-17,11.8],[-23,14.5],[-29,16.5],[-34,18.5],[-34.5,26],[-30,31],[-26,33],[-21,35],[-16,40],[-10,40.5],[-4,39.5],[2,45.5],[8,50],[11.8,51.2],[12,44],[15,40],[20,37],[27,33.5],[31,32],[31.5,25],[33,22],[30,19],[32.5,15],[33,11]]],
+['AUSTRALIA','#e66b55',[-25,134],[[-11,132],[-12,136.7],[-15,135.5],[-17,140.5],[-11,142.5],[-15,145],[-19,147],[-24,152],[-28,153.5],[-34,151],[-38,147],[-39,146],[-38,141],[-35,138],[-32,134],[-34,123],[-35,117.5],[-31.5,115],[-22,114],[-20,119],[-14,126.5],[-12,130]]],
+['','#e29a52',0,[[-12,49.5],[-16,50],[-25,47],[-25.5,45],[-21,43.5],[-16,44]]],
+['','#cdb35f',0,[[50,-5.5],[51,1.5],[53,0.5],[55,-1.5],[58,-2],[58.6,-5],[56,-6],[54,-3.5],[53,-4.5],[51.5,-5]]],
+['','#cdb35f',0,[[66.5,-22],[64,-14],[63.5,-19],[65.5,-24]]],
+['','#cdb35f',0,[[31,130.5],[34,131],[35.5,135.5],[34,137.5],[35,140],[38,141],[41.5,141.5],[44.5,142],[43,145],[42,140],[40,140],[37,137],[35.5,133],[33.5,130]]],
+['','#cdb35f',0,[[5.5,95.5],[2,98],[-3,103.5],[-6,105.5],[-5,102],[0,98.5]]],
+['','#cdb35f',0,[[7,117],[4,118],[-3,116],[-3.5,111],[1,109],[4,113]]],
+['','#e66b55',0,[[-2,134.5],[-3,141],[-6,147],[-10,150.5],[-9,143],[-8,138.5],[-4,132.5]]],
+['','#e66b55',0,[[-34.5,173],[-37.5,178.5],[-41.5,175],[-39,174]]],
+['','#e66b55',0,[[-41,172.5],[-43,173.5],[-46.5,169.5],[-46,166.5],[-43,170]]],
+['ANTÁRTIDA','#eef6fb',[-80,40],[[-70,-180],[-72,-150],[-77,-120],[-74,-100],[-73,-75],[-66,-62],[-72,-60],[-78,-45],[-72,-20],[-70,0],[-69,20],[-67,45],[-66,70],[-68,90],[-66,110],[-66,135],[-69,160],[-72,180],[-90,180],[-90,-180]]]];
+function drawGlobe(){const c=$('globe'),x=c.getContext('2d'),W=c.width,H=c.height,R=Math.min(W,H)/2*0.9*gz,cx=W/2,cy=H/2;x.clearRect(0,0,W,H);
+const span=Math.min(90,150/gz),w=Math.min(180,span*2),nr=gz>=6,l0=nr?Math.max(-80,gc.la-span):-80,l1=nr?Math.min(84,gc.la+span):84,n=nr?40:82;
+const arr=(a,b)=>Array.from({length:n+1},(_,i)=>a+(b-a)*i/n),LA=arr(l0,l1),LO=arr(gc.lo-w,gc.lo+w),inw=m=>Math.abs(wrp(m-gc.lo))<=w+.01;
+const pj=(a,b)=>{const q=pr(a,b,R);if(q.v)return{X:cx+q.x,Y:cy-q.y,v:1};const d=Math.hypot(q.x,q.y)||1;return{X:cx+q.x/d*R,Y:cy-q.y/d*R,v:0}};
+const vs=(a,b)=>{const p=a*D,l=(b-gc.lo)*D,p0=gc.la*D;return[Math.cos(p)*Math.sin(l),Math.cos(p0)*Math.sin(p)-Math.sin(p0)*Math.cos(p)*Math.cos(l),Math.sin(p0)*Math.sin(p)+Math.cos(p0)*Math.cos(p)*Math.cos(l)]};
+const poly=(pts,fill,stroke,lw)=>{const V=pts.map(p=>vs(p[0],p[1])),o=[];
+V.forEach((A,i)=>{const B=V[(i+1)%V.length];if(A[2]>=0)o.push({p:A});if((A[2]>=0)!==(B[2]>=0)){const t=A[2]/(A[2]-B[2]),q=[A[0]+t*(B[0]-A[0]),A[1]+t*(B[1]-A[1])],m=Math.hypot(q[0],q[1])||1;o.push({p:[q[0]/m,q[1]/m],l:A[2]>=0?1:2})}});
+if(!o.some(e=>!e.l))return;
+x.beginPath();o.forEach((e,i)=>{const X=cx+R*e.p[0],Y=cy-R*e.p[1];i?x.lineTo(X,Y):x.moveTo(X,Y);if(e.l===1){const n=o[(i+1)%o.length],a0=Math.atan2(-e.p[1],e.p[0]),d=((Math.atan2(-n.p[1],n.p[0])-a0+3*Math.PI)%(2*Math.PI))-Math.PI;x.arc(cx,cy,R,a0,a0+d,d<0)}});
+x.closePath();x.fillStyle=fill;x.fill();
+if(stroke){x.strokeStyle=stroke;x.lineWidth=lw||1;x.beginPath();V.forEach((A,i)=>{const B=V[(i+1)%V.length];if(A[2]>=0&&B[2]>=0){x.moveTo(cx+R*A[0],cy-R*A[1]);x.lineTo(cx+R*B[0],cy-R*B[1])}});x.stroke()}};
+const ln=(pts,col,lw,dash)=>{x.strokeStyle=col;x.lineWidth=lw;x.setLineDash(dash||[]);x.beginPath();let on=false;for(const[a,b]of pts){const q=pr(a,b,R);if(q.v){on?x.lineTo(cx+q.x,cy-q.y):x.moveTo(cx+q.x,cy-q.y);on=true}else on=false}x.stroke();x.setLineDash([])};
+const og=x.createRadialGradient(cx-R*.35,cy-R*.35,R*.05,cx,cy,R);og.addColorStop(0,'#62c0f5');og.addColorStop(.6,'#2a86c9');og.addColorStop(1,'#12457f');
+x.save();if(gz<8){x.shadowColor='rgba(120,200,255,.75)';x.shadowBlur=26}x.beginPath();x.arc(cx,cy,R,0,7);x.fillStyle=og;x.fill();x.restore();
+x.save();x.beginPath();x.arc(cx,cy,R,0,7);x.clip();
+const st=[30,15,5,1,.1,.01,.001].find(s=>w*2/s>=8)||.001;
+for(let b=Math.ceil((gc.lo-w)/st)*st;b<=gc.lo+w;b+=st)ln(LA.map(a=>[a,b]),'rgba(255,255,255,.22)',1);
+for(let a=Math.ceil(l0/st)*st;a<=l1;a+=st)ln(LO.map(b=>[a,b]),'rgba(255,255,255,.22)',1);
+if(gz<40)LAND.forEach(([,col,,pts])=>poly(pts,col,'rgba(0,30,60,.45)',1));
+if(gz<8){const sh=x.createRadialGradient(cx,cy,R*.5,cx,cy,R);sh.addColorStop(0,'rgba(0,10,40,0)');sh.addColorStop(1,'rgba(0,10,40,.5)');x.fillStyle=sh;x.fillRect(0,0,W,H)}
+const act=S.z1,txt=(t,X,Y,col,sz)=>{x.font=`bold ${sz||12}px system-ui`;x.lineWidth=3;x.strokeStyle='rgba(0,20,50,.6)';x.strokeText(t,X,Y);x.fillStyle=col;x.fillText(t,X,Y)};
+if(gz<3)LAND.forEach(([nmx,,lp])=>{if(!nmx)return;const q=pr(lp[0],lp[1],R);if(q.v&&Math.hypot(q.x,q.y)<R*.8)txt(nmx,cx+q.x-nmx.length*3,cy-q.y,'rgba(255,255,255,.9)',10)});
+const ab=[...Array.from({length:n+1},(_,i)=>[-80+164*i/n,cm(act)-3]),...Array.from({length:n+1},(_,i)=>[84-164*i/n,cm(act)+3])];poly(ab,'rgba(255,61,129,.2)');
+const near=gz<4?2:60,lat0=Math.max(-75,Math.min(75,Math.round(gc.la)+Math.min(12,span*.6)));
+for(let z=1;z<=60;z++){const m=cm(z),on=z===act;if(Math.abs(z-act)>near)continue;
+if(inw(m-3))ln(LA.map(a=>[a,m-3]),on?'#ff3d81':'rgba(255,255,255,.55)',on?2.5:1);
+if(on&&inw(m+3))ln(LA.map(a=>[a,m+3]),'#ff3d81',2.5);
+if(inw(m)){ln(LA.map(a=>[a,m]),'#ffd24a',1.3,[6,4]);const q=pr(lat0,m,R);if(q.v)txt('Z'+z,cx+q.x+3,cy-q.y-4,on?'#ff9ec0':'#ffe58a')}}
+const a=pj(S.la0,S.lo0),b=pj(S.la1,S.lo1);
+if(a.v){x.strokeStyle='#fff';x.lineWidth=1.5;x.beginPath();x.moveTo(a.X,a.Y);x.lineTo(b.X,b.Y);x.stroke();
+[[a,'#e5502a',8],[b,'#1d6fb8',5]].forEach(([q,cl,r])=>{x.fillStyle=cl;x.strokeStyle='#fff';x.lineWidth=2;x.beginPath();x.arc(q.X,q.Y,r,0,7);x.fill();x.stroke()});x.strokeStyle='#fff';x.lineWidth=1;x.beginPath();x.arc(a.X,a.Y,15,0,7);x.stroke()}
+x.restore();
+$('gcap').textContent=`Zoom ${gz<10?f(gz,1):f(gz,0)}× · cuadrícula ${st}° · zona activa ${act} (rosa) · desplazamiento real ${f(S.dist,1)} m ≈ ${f(Math.hypot(b.X-a.X,b.Y-a.Y),1)} px. Arrastra para girar.`}
+$('go').onclick=compute;$('rc').onclick=()=>{if(S.la0){gCenter();drawGlobe()}};
+
+const g2c=$('globe');
+g2c.onpointerdown=e=>{dg={x:e.clientX,y:e.clientY};g2c.setPointerCapture(e.pointerId)};
+g2c.onpointermove=e=>{if(!dg||!S.la0)return;const k=g2c.width/g2c.getBoundingClientRect().width,sc=Math.min(g2c.width,g2c.height)/2*0.9*gz*D;gc.lo=wrp(gc.lo-(e.clientX-dg.x)*k/sc);gc.la=Math.max(-89,Math.min(89,gc.la+(e.clientY-dg.y)*k/sc));dg={x:e.clientX,y:e.clientY};drawGlobe()};
+g2c.onpointerup=g2c.onpointercancel=()=>dg=null;
+$('zoom').oninput=e=>{gz=Math.pow(10,+e.target.value);$('zv').textContent=(gz<10?f(gz,1):f(gz,0))+'×';if(S.la0)drawGlobe()};
+$('bgo').onclick=()=>{const fr=$('from').value,to=$('to').value,m=$('mode').value,E0=el(fr),E1=el(to),p0=gP(0),p1=gP(1),q=(v,d)=>v.toFixed(d),out=['lat,lon,h,zona,este,norte,X,Y,Z'];
+$('bin').value.split('\n').forEach(l=>{const t=l.trim().split(/[\s,;]+/).map(Number);if(t.length<2||t.some(isNaN))return;let o;
+if(m==='geo')o=[t[0],t[1],t[2]||0];else if(m==='utm')o=inv(t[0],t[1],E0,+$('zn').value,$('hm').value==='S').concat(t[2]||0);else if(m==='ecef')o=x2g(t.slice(0,3),E0);else{const a=t[0]*D,b=t[1]*D;o=x2g([t[2]*Math.cos(a)*Math.cos(b),t[2]*Math.cos(a)*Math.sin(b),t[2]*Math.sin(a)],E0)}
+const X=helI(helF(g2x(o[0],o[1],E0,o[2]),p0),p1),[a,b,h]=x2g(X,E1),z=zoneOf(b),u=fwd(a,b,E1,z);
+out.push([q(a,8),q(b,8),q(h,3),z+(a<0?'S':'N'),q(u.E,3),q(u.N,3),q(X[0],3),q(X[1],3),q(X[2],3)].join(','))});$('bout').value=out.join('\n')};
+
+compute();
+</script></body></html>
